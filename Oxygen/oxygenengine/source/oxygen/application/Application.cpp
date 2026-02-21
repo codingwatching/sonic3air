@@ -489,7 +489,7 @@ void Application::update(float timeElapsed)
 	// ImGui frame start must be done here (instead of at the start of "render"), to ensure that the mouse capturing flag is set correctly
 	//  -> This is particularly relevant for touch input, where we would miss the first touch into an ImGui window and falsely pass it to the touch overlay
 	mImGuiIntegration.startFrame();
-	if (mImGuiIntegration.isCapturingMouse() || mImGuiIntegration.isCapturingKeyboard())
+	if (mImGuiIntegration.isCapturingMouse() || mImGuiIntegration.isCapturingKeyboard() || mImGuiIntegration.hasBlockingImGuiWindow())
 	{
 		FTX::System->consumeCurrentEvent();
 	}
