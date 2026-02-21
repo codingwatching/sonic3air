@@ -29,10 +29,8 @@ void ModsStartPage::initialize()
 	if (!mMenuEntries.empty())
 		return;
 
-#if defined(PLATFORM_WINDOWS) || defined(PLATFORM_MAC)
-	mMenuEntries.addEntry("Open mods folder", (uint32)Option::OPEN_MODS_FOLDER);
-#elif defined(PLATFORM_LINUX)
-	mMenuEntries.addEntry("Open mods directory", (uint32)Option::OPEN_MODS_FOLDER);
+#if defined(PLATFORM_WINDOWS) || defined(PLATFORM_MAC) || defined(PLATFORM_LINUX)
+	mMenuEntries.addEntry("Open mods " PLATFORM_DIRECTORY_STRING, (uint32)Option::OPEN_MODS_FOLDER);
 #endif
 
 	mMenuEntries.addEntry("Open Manual in web browser", (uint32)Option::OPEN_MANUAL);
