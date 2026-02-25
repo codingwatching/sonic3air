@@ -103,6 +103,7 @@ public:
 	uint32 getPlatformFlags() const;
 	void switchToRenderMethod(Configuration::RenderMethod newRenderMethod);
 	void setVSyncMode(Configuration::FrameSyncType frameSyncMode);
+	Vec2i getDisplaySize(int displayIndex) const;
 
 private:
 	bool startupEngine();

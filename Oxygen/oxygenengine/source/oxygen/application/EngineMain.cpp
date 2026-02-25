@@ -213,6 +213,26 @@ void EngineMain::setVSyncMode(Configuration::FrameSyncType frameSyncMode)
 	}
 }
 
+Vec2i EngineMain::getDisplaySize(int displayIndex) const
+{
+	SDL_Rect rect;
+	if (SDL_GetDisplayBounds(displayIndex, &rect) == 0)
+	{
+		return Vec2i(rect.w, rect.h);
+	}
+	else
+	{
+		SDL_DisplayMode dm;
+		if (SDL_GetDesktopDisplayMode(displayIndex, &dm) == 0)
+		{
+			return Vec2i(dm.w, dm.h);
+		}
+	}
+
+	// Return some fallback size in case everything failed... how about Full HD?
+	return Vec2i(1920, 1080);
+}
+
 bool EngineMain::startupEngine()
 {
 #if defined(PLATFORM_ANDROID)
@@ -729,21 +749,7 @@ bool EngineMain::createWindow()
 			case Configuration::WindowMode::FULLSCREEN_BORDERLESS:
 			{
 				// Borderless maximized window
-				SDL_Rect rect;
-				if (SDL_GetDisplayBounds(displayIndex, &rect) == 0)
-				{
-					videoConfig.mWindowRect.width = rect.w;
-					videoConfig.mWindowRect.height = rect.h;
-				}
-				else
-				{
-					SDL_DisplayMode dm;
-					if (SDL_GetDesktopDisplayMode(displayIndex, &dm) == 0)
-					{
-						videoConfig.mWindowRect.width = dm.w;
-						videoConfig.mWindowRect.height = dm.h;
-					}
-				}
+				videoConfig.mWindowRect.setSize(getDisplaySize(displayIndex));
 				flags |= SDL_WINDOW_BORDERLESS;
 				break;
 			}
@@ -752,13 +758,15 @@ bool EngineMain::createWindow()
 			{
 				// Fullscreen window at desktop resolution
 				//  -> According to https://wiki.libsdl.org/SDL_SetWindowFullscreen, this is not really an exclusive fullscreen mode, but that's fine
+				videoConfig.mWindowRect.setSize(getDisplaySize(displayIndex));
 				flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 				break;
 			}
 
 			case Configuration::WindowMode::FULLSCREEN_EXCLUSIVE:
 			{
-				// Real exclusive fullscreen with custom resolution
+				// Real exclusive fullscreen with desktop resolution (though also allowing for a custom resolution)
+				videoConfig.mWindowRect.setSize(getDisplaySize(displayIndex));
 				flags |= SDL_WINDOW_FULLSCREEN;
 				break;
 			}

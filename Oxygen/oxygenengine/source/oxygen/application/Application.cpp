@@ -764,8 +764,10 @@ void Application::setWindowMode(WindowMode windowMode, bool force)
 		{
 			if (mWindowMode >= WindowMode::FULLSCREEN_DESKTOP)
 			{
+				// Exit fullscreen first
 				SDL_SetWindowFullscreen(window, 0);
 			}
+
 			SDL_SetWindowSize(window, Configuration::instance().mWindowSize.x, Configuration::instance().mWindowSize.y);
 			SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED_DISPLAY(displayIndex), SDL_WINDOWPOS_CENTERED_DISPLAY(displayIndex));
 			SDL_SetWindowResizable(window, SDL_TRUE);
